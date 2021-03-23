@@ -1,5 +1,10 @@
 import React from 'react';
 import axios from 'axios';
+import Map from './map';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import Form from 'react-bootstrap/Form';
+import Card from 'react-bootstrap/Card';
+import Button from 'react-bootstrap/Button';
 
 class App extends React.Component {
 
@@ -32,7 +37,7 @@ class App extends React.Component {
           <button type="submit">Search For A City!</button>
         </form>
         <h2>Hello From Axi</h2>
-        <img src={this.state.displayFlag === true ? this.state.imgSrc : ''} alt={this.state.location.display_name} />
+        <Map location={this.state.location} imgSrc={this.state.imgSrc} />
       </>
     )
   }
