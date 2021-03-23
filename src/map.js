@@ -1,8 +1,8 @@
 import React from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import Form from 'react-bootstrap/Form';
+// import Form from 'react-bootstrap/Form';
+// import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
-import Button from 'react-bootstrap/Button';
 
 class Map extends React.Component {
 
