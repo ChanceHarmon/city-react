@@ -3,9 +3,9 @@ import axios from 'axios';
 import Map from './map';
 import Error from './error';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import Form from 'react-bootstrap/Form';
-import Card from 'react-bootstrap/Card';
-import Button from 'react-bootstrap/Button';
+// import Form from 'react-bootstrap/Form';
+// import Card from 'react-bootstrap/Card';
+// import Button from 'react-bootstrap/Button';
 
 class App extends React.Component {
 
