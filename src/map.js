@@ -16,10 +16,10 @@ class Map extends React.Component {
               {this.props.location.display_name}
             </Card.Text>
             <Card.Text>
-              {this.props.location.lat}
+              Latitude: {this.props.location.lat}
             </Card.Text>
             <Card.Text>
-              {this.props.location.lon}
+              Longitude: {this.props.location.lon}
             </Card.Text>
           </Card.Body>
         </Card>
