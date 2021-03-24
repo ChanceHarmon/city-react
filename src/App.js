@@ -1,6 +1,7 @@
 import React from 'react';
 import axios from 'axios';
 import Map from './map';
+import Weather from './weather';
 import Error from './error';
 import 'bootstrap/dist/css/bootstrap.min.css';
 // import Form from 'react-bootstrap/Form';
@@ -15,13 +16,21 @@ class App extends React.Component {
       location: {},
       search_query: '',
       imgSrc: '',
+      searchedResult: [],
       displyError: false,
-      error: {}
+      error: ''
     }
   }
 
+  handleUserQuery = async (event) => {
+    await this.getLocation(event)
+      .then(() => {
+        this.getWeather()
+      }).catch(err => console.log(err.message))
+  }
 
-  getLocationInfo = async (event) => {
+
+  getLocation = async (event) => {
     event.preventDefault();
     try {
       const url = `https://us1.locationiq.com/v1/search.php?key=${process.env.REACT_APP_LOCATION_API_KEY}&q=${this.state.search_query}&format=json`;
@@ -29,24 +38,32 @@ class App extends React.Component {
       const locationArray = location.data;
       console.log(locationArray)
 
-      this.setState({ location: locationArray[0], displayFlag: true, imgSrc: `https://maps.locationiq.com/v3/staticmap?key=${process.env.REACT_APP_LOCATION_API_KEY}&center=${locationArray[0].lat},${locationArray[0].lon}&zoom=10` });
+      this.setState({ location: locationArray[0], imgSrc: `https://maps.locationiq.com/v3/staticmap?key=${process.env.REACT_APP_LOCATION_API_KEY}&center=${locationArray[0].lat},${locationArray[0].lon}&zoom=10` });
       console.log(this.state)
     } catch (error) {
-      console.error(error);
-      this.setState({ displayError: true, error: error })
-
+      this.setState({ imgSrc: '', location: {}, searchedResult: [], displayError: true, error: error })
     }
   };
+
+
+  getWeather = async () => {
+    const SERVER = 'https://city-react-server.herokuapp.com'
+    // const SERVER = 'http://localhost:3001'
+    const forecast = await axios.get(`${SERVER}/weather?lat=${this.state.location.lat}&lon=${this.state.location.lon}`);
+    console.log(forecast)
+    this.setState({ searchedResult: forecast.data })
+  }
 
   render() {
     return (
       <>
-        <form onSubmit={this.getLocationInfo}>
+        <form onSubmit={this.handleUserQuery}>
           <input onChange={(event) => this.setState({ search_query: event.target.value })} placeholder="city" />
           <button type="submit">Search For A City!</button>
         </form>
         <h2>Hello From Axi</h2>
         <Map location={this.state.location} imgSrc={this.state.imgSrc} />
+        <Weather location={this.state.searchedResult} />
         {this.state.displayError &&
           <>
             <Error handleError={this.state.error} />
