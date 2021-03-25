@@ -2,6 +2,7 @@ import React from 'react';
 import axios from 'axios';
 import Map from './map';
 import Weather from './weather';
+import Movie from './movies';
 import Error from './error';
 import 'bootstrap/dist/css/bootstrap.min.css';
 // import Form from 'react-bootstrap/Form';
@@ -16,7 +17,8 @@ class App extends React.Component {
       location: {},
       search_query: '',
       imgSrc: '',
-      searchedResult: [],
+      weatherResult: [],
+      movieResult: [],
       displyError: false,
       error: ''
     }
@@ -25,7 +27,8 @@ class App extends React.Component {
   handleUserQuery = async (event) => {
     await this.getLocation(event)
       .then(() => {
-        this.getWeather()
+        this.getWeather();
+        this.getMovies();
       }).catch(err => console.log(err.message))
   }
 
@@ -51,7 +54,15 @@ class App extends React.Component {
     // const SERVER = 'http://localhost:3001'
     const forecast = await axios.get(`${SERVER}/weather?lat=${this.state.location.lat}&lon=${this.state.location.lon}`);
     console.log(forecast)
-    this.setState({ searchedResult: forecast.data })
+    this.setState({ weatherResult: forecast.data })
+  }
+
+  getMovies = async () => {
+    const SERVER = 'https://city-react-server.herokuapp.com'
+    // const SERVER = 'http://localhost:3001'
+    const movieResults = await axios.get(`${SERVER}/movies?city=${this.state.search_query}`);
+    console.log(movieResults)
+    this.setState({ movieResult: movieResults.data })
   }
 
   render() {
@@ -63,7 +74,8 @@ class App extends React.Component {
         </form>
         <h2>Hello From Axi</h2>
         <Map location={this.state.location} imgSrc={this.state.imgSrc} />
-        <Weather location={this.state.searchedResult} />
+        <Weather weatherList={this.state.weatherResult} />
+        <Movie movieList={this.state.movieResult} />
         {this.state.displayError &&
           <>
             <Error handleError={this.state.error} />
